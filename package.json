@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^0.9.13",
     "@monaco-editor/react": "^4.3.1",
     "monaco-editor": "0.20.0",
     "next": "latest",
