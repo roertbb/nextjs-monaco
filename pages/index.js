@@ -3,22 +3,37 @@ import Editor from "@monaco-editor/react";
 import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { MonacoBinding } from "../hacks/y-monaco";
+import { MonacoBinding } from "y-monaco";
 
-const p5Template = `import p5 from 'p5';
+// const p5Template = `import p5 from 'p5';
 
-const sketch = (s) => {
-    s.setup = () => {
-        s.createCanvas(500, 500);
-    }
+// const sketch = (s) => {
+//     console.log({s})
 
-    s.draw = () => {
-        s.background(0);
-        s.circle(20,20,20);
-    }
+//     s.setup = () => {
+//         s.createCanvas(500, 500);
+//     }
+
+//     s.draw = () => {
+//         s.background(0);
+//         s.circle(20,20,20);
+//     }
+// }
+
+// const sketchInstance = new p5(sketch);`;
+const p5Template = `
+import * as p5 from 'p5';
+
+function setup() {
+  createCanvas(400, 400);
 }
 
-const sketchInstance = new p5(sketch);`;
+function draw() {
+  background(220);
+}
+
+window.setup = setup
+window.draw = draw`;
 
 export default function Home() {
   const [editorValue, setEditorValue] = React.useState(p5Template);
@@ -27,17 +42,21 @@ export default function Home() {
   const [value, setValue] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [color, setColor] = React.useState("#ffb61e");
-  const [connected, setConnected] = React.useState(false);
+
+  // TODOs:
+  // - Monaco is mounted
+  // - connect with webrtc
+  // - set value after loading from database
+  // - tell it's ready
 
   function connect() {
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(value, ydoc, { password });
     const ytext = ydoc.getText("monaco");
 
-    provider.awareness.on("change", ({ added, updated, removed }) => {
-      // console.log({ added, updated, removed });
-      // TODO: less hacky way to update the content
-      // setCodeValue(editor?.getValue());
+    provider.awareness.setLocalStateField("user", {
+      name: color,
+      color,
     });
 
     const monacoBinding = new MonacoBinding(
@@ -48,8 +67,6 @@ export default function Home() {
     );
 
     window.example = { provider, ydoc, ytext, monacoBinding };
-
-    setConnected(true);
   }
 
   const handleEditorDidMount = (editor, monaco) => {
@@ -58,6 +75,10 @@ export default function Home() {
 
   const handleEditorChange = (value, event) => {
     setEditorValue(value);
+  };
+
+  const handleSetValue = () => {
+    setEditorValue(p5Template);
   };
 
   return (
@@ -85,6 +106,7 @@ export default function Home() {
           />
         </label>
         <button onClick={connect}>Connect</button>
+        <button onClick={handleSetValue}>Set value</button>
       </div>
       <div style={{ display: "flex" }}>
         <Editor
@@ -112,7 +134,6 @@ export default function Home() {
           <SandpackPreview />
         </SandpackProvider>
       </div>
-      {/* https://github.com/michaelti/y-monaco/commit/96a6a92e4cb67428ec70812886f3a8ca235a0aa1 - color for selections */}
       <style global jsx>{`
         #monaco-editor {
           width: 100%;
@@ -129,6 +150,10 @@ export default function Home() {
           border-bottom: orange solid 2px;
           height: 100%;
           box-sizing: border-box;
+        }
+        .yRemoteSelection.red {
+          border-color: red;
+          background-color: red;
         }
         .yRemoteSelectionHead::after {
           position: absolute;
