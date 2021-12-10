@@ -1,3 +1,6 @@
+import Input from "../components/Input";
+import { codeTemplate, correctValue } from "./test.template";
+
 # Code and Focus
 
 Code Hike will apply syntax highlighting to any code block
@@ -12,12 +15,21 @@ function lorem(ipsum, dolor = 1) {
 
 It works by default with many languages
 
-Use `focus` to show the code that's important to the reader
+```js
+function setup() {
+  createCanvas(400, 400);
+}
 
-```js focus=4
-function lorem(ipsum, dolor = 1) {
-  const sit = ipsum == null ? 0 : ipsum.sit;
-  dolor = sit - amet(dolor);
-  return sit ? consectetur(ipsum) : [];
+function draw() {
+```
+
+<Input
+  onChange={props.handleChange}
+  correctValue={correctValue}
+  onSuccess={props.onSuccess}
+  template={codeTemplate}
+/>
+
+```js
 }
 ```
