@@ -12,7 +12,7 @@
     "prop-types": "^15.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "y-monaco": "^0.1.2",
+    "y-monaco": "git+https://github.com/roertbb/y-monaco",
     "y-webrtc": "^10.2.2",
     "yjs": "^13.5.22"
   },
