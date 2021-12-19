@@ -5,35 +5,33 @@ import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { MonacoBinding } from "y-monaco";
 
-// const p5Template = `import p5 from 'p5';
+const p5Template = `import p5 from 'p5';
 
-// const sketch = (s) => {
-//     console.log({s})
+const sketch = (s) => {
+    s.setup = () => {
+        s.createCanvas(500, 500);
+    }
 
-//     s.setup = () => {
-//         s.createCanvas(500, 500);
-//     }
+    s.draw = () => {
+        s.background(0);
+        s.circle(20,20,20);
+    }
+}
 
-//     s.draw = () => {
-//         s.background(0);
-//         s.circle(20,20,20);
-//     }
+const sketchInstance = new p5(sketch);`;
+// const p5Template = `
+// import * as p5 from 'p5';
+
+// function setup() {
+//   createCanvas(400, 400);
 // }
 
-// const sketchInstance = new p5(sketch);`;
-const p5Template = `
-import * as p5 from 'p5';
+// function draw() {
+//   background(220);
+// }
 
-function setup() {
-  createCanvas(400, 400);
-}
-
-function draw() {
-  background(220);
-}
-
-window.setup = setup
-window.draw = draw`;
+// window.setup = setup
+// window.draw = draw`;
 
 export default function Home() {
   const [editorValue, setEditorValue] = React.useState(p5Template);
